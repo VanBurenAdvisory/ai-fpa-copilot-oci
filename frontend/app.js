@@ -4,7 +4,7 @@ const companyNameInput = document.getElementById("companyName");
 const statusEl = document.getElementById("status");
 const outputEl = document.getElementById("output");
 
-const API_URL = "https://YOUR_API_GATEWAY_URL/analyze";
+const API_URL = "https://ai-fpa-copilot-oci.vercel.app/api/analyze";
 
 function csvToJson(csvText) {
   const lines = csvText.trim().split("\n");
