@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI FP&A Copilot</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>AI FP&A Copilot</h1>
+    <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
+
+    <section class="card">
+      <label for="csvFile">Financial CSV</label>
+      <input type="file" id="csvFile" accept=".csv" />
+
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" placeholder="DemoCo" />
+
+      <button id="analyzeBtn">Analyze</button>
+    </section>
+
+    <section class="card">
+      <h2>Status</h2>
+      <pre id="status">Waiting for file...</pre>
+    </section>
+
+    <section class="card">
+      <h2>AI Output</h2>
+      <div id="output"></div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
