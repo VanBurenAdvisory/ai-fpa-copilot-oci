@@ -7,25 +7,59 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-    const { company_name, months, questions, data } = req.body;
-    const financialData = months || data || [];
+const { company_name, months, questions, data } = req.body;
+const financialData = months || data || [];
 
-    const prompt = `
-You are a senior FP&A advisor.
+const enhancedData = financialData.map(row => {
+  const revenue = Number(row.Revenue || row.revenue || 0);
+  const cogs = Number(row.COGS || row.cogs || 0);
+  const opex = Number(row.OperatingExpense || row.operatingExpense || row.opex || 0);
 
-Analyze the following financial data for ${company_name || "Demo Company"}:
+  const grossMargin = revenue ? ((revenue - cogs) / revenue) : null;
+  const operatingMargin = revenue ? ((revenue - cogs - opex) / revenue) : null;
 
-${JSON.stringify(financialData, null, 2)}
+  return {
+    ...row,
+    GrossMargin: grossMargin,
+    OperatingMargin: operatingMargin
+  };
+});
+
+ const prompt = `
+You are a senior FP&A leader presenting to a CFO.
+
+Analyze the financial data for ${company_name || "the company"}.
+
+Focus on:
+- Revenue trends (growth, seasonality)
+- Margin trends (COGS and operating leverage)
+- Cost structure changes
+- Any anomalies or inflection points
+
+Then produce:
+
+1. Executive Summary (3–5 sentences, concise, business-focused)
+2. Key Drivers (3–5 bullets, specific and numeric where possible)
+3. Risks (3 bullets, realistic, not generic)
+4. Scenarios:
+   - Base: what is most likely
+   - Upside: what would need to go right
+   - Downside: what could go wrong
+
+Be specific. Reference trends in the data. Avoid generic statements.
+
+Data:
+${JSON.stringify(enhancedData, null, 2)}
 
 Return ONLY valid JSON in this exact format:
 {
-  "executive_summary": "A concise CFO-level summary.",
-  "key_drivers": ["driver 1", "driver 2", "driver 3"],
-  "risks": ["risk 1", "risk 2", "risk 3"],
+  "executive_summary": "...",
+  "key_drivers": ["..."],
+  "risks": ["..."],
   "scenarios": {
-    "base": "base case scenario",
-    "upside": "upside scenario",
-    "downside": "downside scenario"
+    "base": "...",
+    "upside": "...",
+    "downside": "..."
   }
 }
 `;
