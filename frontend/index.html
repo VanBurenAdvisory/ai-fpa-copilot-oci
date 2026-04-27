@@ -8,27 +8,27 @@
 </head>
 <body>
   <main class="container">
-    <div class="top-bar">
-      <h1>AI FP&A Copilot</h1>
-
+    <header class="top-bar">
+      <p class="eyebrow">FP&amp;A Narrative Dashboard</p>
+      <h1>AI FP&amp;A Copilot</h1>
       <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
-    </div>
+    </header>
 
     <div class="workspace">
       <section class="card form-card">
         <h2>Selection Options</h2>
 
-        <div class="file-field">
+        <div class="field-group">
           <label for="csvFile">Financial CSV</label>
           <input type="file" id="csvFile" accept=".csv" />
         </div>
 
-        <div class="company-field">
+        <div class="field-group">
           <label for="companyName">Company Name</label>
           <input type="text" id="companyName" placeholder="DemoCo" />
         </div>
 
-        <div class="summary-field">
+        <div class="field-group">
           <label for="summaryLevel">Summary Level</label>
           <select id="summaryLevel">
             <option value="executive">Executive Level</option>
@@ -65,7 +65,12 @@
       </section>
 
       <section class="card output-card">
-        <h2>AI Output</h2>
+        <div class="output-header">
+          <div>
+            <p class="eyebrow">Narrative Results</p>
+            <h2>AI Output</h2>
+          </div>
+        </div>
         <div id="output"></div>
       </section>
     </div>

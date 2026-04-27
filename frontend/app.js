@@ -83,19 +83,27 @@ function getSummaryLabel(level) {
 
 function renderResult(data) {
   outputEl.innerHTML = `
-    <h3>${getSummaryLabel(data.summary_level)} Summary</h3>
-    <p>${data.executive_summary || ""}</p>
+    <section class="result-section summary-section">
+      <h3>${getSummaryLabel(data.summary_level)} Summary</h3>
+      <p>${data.executive_summary || ""}</p>
+    </section>
 
-    <h3>Key Drivers</h3>
-    <ul>${(data.key_drivers || []).map(x => `<li>${x}</li>`).join("")}</ul>
+    <section class="result-section">
+      <h3>Key Drivers</h3>
+      <ul>${(data.key_drivers || []).map(x => `<li>${x}</li>`).join("")}</ul>
+    </section>
 
-    <h3>Risks</h3>
-    <ul>${(data.risks || []).map(x => `<li>${x}</li>`).join("")}</ul>
+    <section class="result-section">
+      <h3>Risks</h3>
+      <ul>${(data.risks || []).map(x => `<li>${x}</li>`).join("")}</ul>
+    </section>
 
-    <h3>Scenarios</h3>
-    <p><strong>Base:</strong> ${data.scenarios?.base || ""}</p>
-    <p><strong>Upside:</strong> ${data.scenarios?.upside || ""}</p>
-    <p><strong>Downside:</strong> ${data.scenarios?.downside || ""}</p>
+    <section class="result-section scenario-section">
+      <h3>Scenarios</h3>
+      <p><strong>Base:</strong> ${data.scenarios?.base || ""}</p>
+      <p><strong>Upside:</strong> ${data.scenarios?.upside || ""}</p>
+      <p><strong>Downside:</strong> ${data.scenarios?.downside || ""}</p>
+    </section>
   `;
 }
 
