@@ -8,8 +8,17 @@
 </head>
 <body>
   <main class="container">
-    <h1>AI FP&A Copilot</h1>
-    <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
+    <div class="top-bar">
+      <div>
+        <h1>AI FP&A Copilot</h1>
+        <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
+      </div>
+
+      <section class="status-panel" aria-live="polite">
+        <h2>Status</h2>
+        <pre id="status">Waiting for file...</pre>
+      </section>
+    </div>
 
     <section class="card">
       <label for="csvFile">Financial CSV</label>
@@ -18,12 +27,7 @@
       <label for="companyName">Company Name</label>
       <input type="text" id="companyName" placeholder="DemoCo" />
 
-      <button id="analyzeBtn">Analyze</button>
-    </section>
-
-    <section class="card">
-      <h2>Status</h2>
-      <pre id="status">Waiting for file...</pre>
+      <button id="analyzeBtn" class="analyze-button">Analyze</button>
     </section>
 
     <section class="card">
