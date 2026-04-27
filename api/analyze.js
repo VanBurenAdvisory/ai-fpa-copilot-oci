@@ -82,10 +82,16 @@ Return ONLY valid JSON in this exact format:
       return res.status(response.status).json(result);
     }
 
-    const text = result.output?.[0]?.content?.[0]?.text || "{}";
-    const parsed = JSON.parse(text);
+const text = result.output?.[0]?.content?.[0]?.text || "{}";
 
-    return res.status(200).json(parsed);
+const cleaned = text
+  .replace(/```json/g, "")
+  .replace(/```/g, "")
+  .trim();
+
+const parsed = JSON.parse(cleaned);
+
+return res.status(200).json(parsed);
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
