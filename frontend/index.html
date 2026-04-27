@@ -11,11 +11,6 @@
     <div class="top-bar">
       <h1>AI FP&A Copilot</h1>
 
-      <section class="status-panel" aria-live="polite">
-        <h2>Status</h2>
-        <pre id="status">Waiting for file...</pre>
-      </section>
-
       <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
     </div>
 
@@ -60,7 +55,10 @@
         </label>
       </fieldset>
 
-      <button id="analyzeBtn" class="analyze-button">Analyze</button>
+      <div class="action-row">
+        <button id="analyzeBtn" class="analyze-button">Analyze</button>
+        <span id="status" class="status-text" aria-live="polite">Waiting for file...</span>
+      </div>
     </section>
 
     <section class="card">
