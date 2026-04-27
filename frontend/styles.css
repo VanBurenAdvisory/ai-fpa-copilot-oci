@@ -12,24 +12,28 @@ body {
 }
 
 h1 {
-  margin-bottom: 24px;
+  margin: 0;
 }
 
 .top-bar {
   display: grid;
   grid-template-columns: 1fr minmax(260px, 360px);
-  gap: 24px;
-  align-items: start;
+  column-gap: 24px;
+  row-gap: 18px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .subtitle {
   color: #555;
-  margin-bottom: 24px;
+  grid-column: 1 / -1;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .status-panel {
   background: white;
-  border: 4px solid #1d9bf0;
+  border: 1px solid #dde2ea;
   border-radius: 8px;
   min-height: 44px;
   padding: 10px 14px;
@@ -82,6 +86,10 @@ pre {
   .top-bar {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+
+  .subtitle {
+    white-space: normal;
   }
 
   .status-panel {
