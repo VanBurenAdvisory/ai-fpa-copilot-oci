@@ -17,37 +17,38 @@ h1 {
 
 .top-bar {
   display: grid;
-  grid-template-columns: 1fr minmax(260px, 360px);
-  column-gap: 24px;
-  row-gap: 18px;
-  align-items: center;
+  grid-template-columns: 1fr;
   margin-bottom: 24px;
 }
 
 .subtitle {
   color: #555;
-  grid-column: 1 / -1;
-  margin: 0;
+  margin: 18px 0 0;
   white-space: nowrap;
 }
 
-.status-panel {
-  background: white;
-  border: 1px solid #dde2ea;
-  border-radius: 8px;
-  min-height: 44px;
-  padding: 10px 14px;
-  box-sizing: border-box;
-}
-
-.status-panel h2 {
+.status-text {
+  color: #222;
   font-size: 14px;
-  margin: 0 0 6px;
 }
 
-.status-panel pre {
+.status-text.success {
+  color: #157f3b;
+}
+
+.status-text.error {
+  color: #c62828;
+}
+
+.action-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.action-row .analyze-button {
   margin: 0;
-  font-size: 13px;
 }
 
 .card {
@@ -132,7 +133,6 @@ button {
 }
 
 .analyze-button {
-  grid-column: 1;
   width: auto;
   min-width: 136px;
   padding: 8px 18px;
@@ -152,10 +152,6 @@ pre {
     white-space: normal;
   }
 
-  .status-panel {
-    width: 100%;
-  }
-
   .form-card {
     grid-template-columns: 1fr;
     gap: 14px;
@@ -171,7 +167,9 @@ pre {
     gap: 0;
   }
 
-  .analyze-button {
+  .action-row {
     grid-column: auto;
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

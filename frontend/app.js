@@ -10,6 +10,15 @@ const outputEl = document.getElementById("output");
 
 const API_URL = "https://ai-fpa-copilot-oci.vercel.app/api/analyze";
 
+function setStatus(message, state = "default") {
+  statusEl.textContent = message;
+  statusEl.classList.remove("success", "error");
+
+  if (state === "success" || state === "error") {
+    statusEl.classList.add(state);
+  }
+}
+
 function csvToJson(csvText) {
   const lines = csvText.trim().split("\n");
   const headers = lines[0].split(",").map(h => h.trim());
@@ -99,28 +108,28 @@ analyzeBtn.addEventListener("click", async () => {
   const endDate = endDateInput.value;
 
   if (!file) {
-    statusEl.textContent = "Please select a CSV file.";
+    setStatus("Please select a CSV file.", "error");
     return;
   }
 
   if (!analyzeAllData && (!startDate || !endDate)) {
-    statusEl.textContent = "Please select a start and end date, or choose Analyze all Data.";
+    setStatus("Please select a start and end date, or choose Analyze all Data.", "error");
     return;
   }
 
   if (!analyzeAllData && startDate > endDate) {
-    statusEl.textContent = "Start date must be before the end date.";
+    setStatus("Start date must be before the end date.", "error");
     return;
   }
 
   try {
-    statusEl.textContent = "Reading CSV...";
+    setStatus("Reading CSV...");
     const csvText = await file.text();
     const rows = csvToJson(csvText);
     const rowsToAnalyze = analyzeAllData ? rows : filterRowsByDate(rows, startDate, endDate);
 
     if (!rowsToAnalyze.length) {
-      statusEl.textContent = "No rows matched the selected data range.";
+      setStatus("No rows matched the selected data range.", "error");
       return;
     }
 
@@ -142,7 +151,7 @@ analyzeBtn.addEventListener("click", async () => {
       ]
     };
 
-    statusEl.textContent = "Generating analysis...";
+    setStatus("Generating analysis...");
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -158,9 +167,9 @@ analyzeBtn.addEventListener("click", async () => {
 
     const result = await response.json();
     renderResult(result);
-    statusEl.textContent = "Done.";
+    setStatus("Done.", "success");
   } catch (err) {
-    statusEl.textContent = `Error: ${err.message}`;
+    setStatus(`Error: ${err.message}`, "error");
   }
 });
 
