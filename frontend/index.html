@@ -14,57 +14,61 @@
       <p class="subtitle">Upload a CSV and generate an executive summary, key drivers, risks, and scenarios.</p>
     </div>
 
-    <section class="card form-card">
-      <div class="file-field">
-        <label for="csvFile">Financial CSV</label>
-        <input type="file" id="csvFile" accept=".csv" />
-      </div>
+    <div class="workspace">
+      <section class="card form-card">
+        <h2>Selection Options</h2>
 
-      <div class="company-field">
-        <label for="companyName">Company Name</label>
-        <input type="text" id="companyName" placeholder="DemoCo" />
-      </div>
-
-      <div class="summary-field">
-        <label for="summaryLevel">Summary Level</label>
-        <select id="summaryLevel">
-          <option value="executive">Executive Level</option>
-          <option value="management">Management Level</option>
-          <option value="detailed">Detailed Analysis</option>
-        </select>
-      </div>
-
-      <fieldset class="date-range-field">
-        <legend>Data Range</legend>
-
-        <div class="date-inputs">
-          <div>
-            <label for="startDate">Start Date</label>
-            <input type="date" id="startDate" />
-          </div>
-
-          <div>
-            <label for="endDate">End Date</label>
-            <input type="date" id="endDate" />
-          </div>
+        <div class="file-field">
+          <label for="csvFile">Financial CSV</label>
+          <input type="file" id="csvFile" accept=".csv" />
         </div>
 
-        <label class="checkbox-label">
-          <input type="checkbox" id="analyzeAllData" checked />
-          Analyze all Data
-        </label>
-      </fieldset>
+        <div class="company-field">
+          <label for="companyName">Company Name</label>
+          <input type="text" id="companyName" placeholder="DemoCo" />
+        </div>
 
-      <div class="action-row">
-        <button id="analyzeBtn" class="analyze-button">Analyze</button>
-        <span id="status" class="status-text" aria-live="polite">Waiting for file...</span>
-      </div>
-    </section>
+        <div class="summary-field">
+          <label for="summaryLevel">Summary Level</label>
+          <select id="summaryLevel">
+            <option value="executive">Executive Level</option>
+            <option value="management">Management Level</option>
+            <option value="detailed">Detailed Analysis</option>
+          </select>
+        </div>
 
-    <section class="card">
-      <h2>AI Output</h2>
-      <div id="output"></div>
-    </section>
+        <fieldset class="date-range-field">
+          <legend>Data Range</legend>
+
+          <div class="date-inputs">
+            <div>
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate" />
+            </div>
+
+            <div>
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate" />
+            </div>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="analyzeAllData" checked />
+            Analyze all Data
+          </label>
+        </fieldset>
+
+        <div class="action-row">
+          <button id="analyzeBtn" class="analyze-button">Analyze</button>
+          <span id="status" class="status-text" aria-live="polite">Waiting for file...</span>
+        </div>
+      </section>
+
+      <section class="card output-card">
+        <h2>AI Output</h2>
+        <div id="output"></div>
+      </section>
+    </div>
   </main>
 
   <script src="./app.js"></script>
