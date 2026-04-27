@@ -30,6 +30,36 @@
         <input type="text" id="companyName" placeholder="DemoCo" />
       </div>
 
+      <div class="summary-field">
+        <label for="summaryLevel">Summary Level</label>
+        <select id="summaryLevel">
+          <option value="executive">Executive Level</option>
+          <option value="management">Management Level</option>
+          <option value="detailed">Detailed Analysis</option>
+        </select>
+      </div>
+
+      <fieldset class="date-range-field">
+        <legend>Data Range</legend>
+
+        <div class="date-inputs">
+          <div>
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" />
+          </div>
+
+          <div>
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" />
+          </div>
+        </div>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="analyzeAllData" checked />
+          Analyze all Data
+        </label>
+      </fieldset>
+
       <button id="analyzeBtn" class="analyze-button">Analyze</button>
     </section>
 

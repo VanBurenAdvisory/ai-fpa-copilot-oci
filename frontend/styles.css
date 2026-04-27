@@ -78,9 +78,57 @@ input, button {
   font-size: 14px;
 }
 
+input:disabled {
+  background: #f1f3f6;
+  color: #777;
+}
+
+select {
+  display: block;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 10px;
+  font-size: 14px;
+}
+
 button {
   cursor: pointer;
   font-weight: bold;
+}
+
+.summary-field {
+  grid-column: 1;
+}
+
+.date-range-field {
+  grid-column: 2;
+  border: 1px solid #dde2ea;
+  border-radius: 8px;
+  margin: 0;
+  padding: 14px;
+}
+
+.date-range-field legend {
+  padding: 0 6px;
+  font-weight: bold;
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin: 0;
 }
 
 .analyze-button {
@@ -111,6 +159,16 @@ pre {
   .form-card {
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+
+  .summary-field,
+  .date-range-field {
+    grid-column: auto;
+  }
+
+  .date-inputs {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 
   .analyze-button {

@@ -1,6 +1,10 @@
 const analyzeBtn = document.getElementById("analyzeBtn");
 const csvFileInput = document.getElementById("csvFile");
 const companyNameInput = document.getElementById("companyName");
+const summaryLevelInput = document.getElementById("summaryLevel");
+const startDateInput = document.getElementById("startDate");
+const endDateInput = document.getElementById("endDate");
+const analyzeAllDataInput = document.getElementById("analyzeAllData");
 const statusEl = document.getElementById("status");
 const outputEl = document.getElementById("output");
 
@@ -22,9 +26,55 @@ function csvToJson(csvText) {
   });
 }
 
+function findDateColumn(row) {
+  const dateColumns = ["Date", "date", "Month", "month", "Period", "period"];
+  return dateColumns.find(column => Object.prototype.hasOwnProperty.call(row, column));
+}
+
+function toggleDateRangeControls() {
+  const isAnalyzingAllData = analyzeAllDataInput.checked;
+  startDateInput.disabled = isAnalyzingAllData;
+  endDateInput.disabled = isAnalyzingAllData;
+}
+
+function filterRowsByDate(rows, startDate, endDate) {
+  if (!rows.length) {
+    return rows;
+  }
+
+  const dateColumn = findDateColumn(rows[0]);
+
+  if (!dateColumn) {
+    throw new Error("No Date, Month, or Period column was found in the CSV.");
+  }
+
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T23:59:59`);
+
+  return rows.filter(row => {
+    const rowDate = new Date(row[dateColumn]);
+
+    if (Number.isNaN(rowDate.getTime())) {
+      return false;
+    }
+
+    return rowDate >= start && rowDate <= end;
+  });
+}
+
+function getSummaryLabel(level) {
+  const labels = {
+    executive: "Executive Level",
+    management: "Management Level",
+    detailed: "Detailed Analysis"
+  };
+
+  return labels[level] || labels.executive;
+}
+
 function renderResult(data) {
   outputEl.innerHTML = `
-    <h3>Executive Summary</h3>
+    <h3>${getSummaryLabel(data.summary_level)} Summary</h3>
     <p>${data.executive_summary || ""}</p>
 
     <h3>Key Drivers</h3>
@@ -43,9 +93,23 @@ function renderResult(data) {
 analyzeBtn.addEventListener("click", async () => {
   const file = csvFileInput.files[0];
   const companyName = companyNameInput.value || "DemoCo";
+  const summaryLevel = summaryLevelInput.value;
+  const analyzeAllData = analyzeAllDataInput.checked;
+  const startDate = startDateInput.value;
+  const endDate = endDateInput.value;
 
   if (!file) {
     statusEl.textContent = "Please select a CSV file.";
+    return;
+  }
+
+  if (!analyzeAllData && (!startDate || !endDate)) {
+    statusEl.textContent = "Please select a start and end date, or choose Analyze all Data.";
+    return;
+  }
+
+  if (!analyzeAllData && startDate > endDate) {
+    statusEl.textContent = "Start date must be before the end date.";
     return;
   }
 
@@ -53,10 +117,24 @@ analyzeBtn.addEventListener("click", async () => {
     statusEl.textContent = "Reading CSV...";
     const csvText = await file.text();
     const rows = csvToJson(csvText);
+    const rowsToAnalyze = analyzeAllData ? rows : filterRowsByDate(rows, startDate, endDate);
+
+    if (!rowsToAnalyze.length) {
+      statusEl.textContent = "No rows matched the selected data range.";
+      return;
+    }
 
     const payload = {
       company_name: companyName,
-      months: rows,
+      data: rowsToAnalyze,
+      summary_level: summaryLevel,
+      date_range: {
+        analyze_all_data: analyzeAllData,
+        start_date: analyzeAllData ? null : startDate,
+        end_date: analyzeAllData ? null : endDate,
+        total_rows: rows.length,
+        analyzed_rows: rowsToAnalyze.length
+      },
       questions: [
         "Summarize trends",
         "Provide base, upside, and downside scenarios",
@@ -64,7 +142,7 @@ analyzeBtn.addEventListener("click", async () => {
       ]
     };
 
-    statusEl.textContent = "Calling OCI API...";
+    statusEl.textContent = "Generating analysis...";
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -85,3 +163,6 @@ analyzeBtn.addEventListener("click", async () => {
     statusEl.textContent = `Error: ${err.message}`;
   }
 });
+
+analyzeAllDataInput.addEventListener("change", toggleDateRangeControls);
+toggleDateRangeControls();

@@ -7,28 +7,46 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
-const { company_name, months, questions, data } = req.body;
-const financialData = months || data || [];
+    const { company_name, months, questions, data, summary_level, date_range } = req.body;
+    const financialData = months || data || [];
+    const summaryLevel = summary_level || "executive";
 
-const enhancedData = financialData.map(row => {
-  const revenue = Number(row.Revenue || row.revenue || 0);
-  const cogs = Number(row.COGS || row.cogs || 0);
-  const opex = Number(row.OperatingExpense || row.operatingExpense || row.opex || 0);
+    const summaryInstructions = {
+      executive: "Write for a CFO or executive audience. Keep the summary concise, strategic, and focused on the most important financial implications. Use 3-5 sentences.",
+      management: "Write for business management. Include more operational context, explain what changed, why it matters, and where leaders should focus. Use 2-3 concise paragraphs.",
+      detailed: "Write a detailed FP&A analysis. Include specific trend commentary, metric movement, margin and cost interpretation, anomalies, and supporting numeric evidence where available. Use 4-6 paragraphs."
+    };
 
-  const grossMargin = revenue ? ((revenue - cogs) / revenue) : null;
-  const operatingMargin = revenue ? ((revenue - cogs - opex) / revenue) : null;
+    const selectedSummaryInstruction = summaryInstructions[summaryLevel] || summaryInstructions.executive;
 
-  return {
-    ...row,
-    GrossMargin: grossMargin,
-    OperatingMargin: operatingMargin
-  };
-});
+    const enhancedData = financialData.map(row => {
+      const revenue = Number(row.Revenue || row.revenue || 0);
+      const cogs = Number(row.COGS || row.cogs || 0);
+      const opex = Number(row.OperatingExpense || row.operatingExpense || row.opex || 0);
 
- const prompt = `
-You are a senior FP&A leader presenting to a CFO.
+      const grossMargin = revenue ? ((revenue - cogs) / revenue) : null;
+      const operatingMargin = revenue ? ((revenue - cogs - opex) / revenue) : null;
+
+      return {
+        ...row,
+        GrossMargin: grossMargin,
+        OperatingMargin: operatingMargin
+      };
+    });
+
+    const prompt = `
+You are a senior FP&A leader presenting financial analysis.
 
 Analyze the financial data for ${company_name || "the company"}.
+
+Summary level requested: ${summaryLevel}
+Summary instruction: ${selectedSummaryInstruction}
+
+Data range context:
+${JSON.stringify(date_range || { analyze_all_data: true }, null, 2)}
+
+Questions:
+${JSON.stringify(questions || [], null, 2)}
 
 Focus on:
 - Revenue trends (growth, seasonality)
@@ -38,8 +56,8 @@ Focus on:
 
 Then produce:
 
-1. Executive Summary (3–5 sentences, concise, business-focused)
-2. Key Drivers (3–5 bullets, specific and numeric where possible)
+1. Summary that follows the requested summary level
+2. Key Drivers (3-5 bullets, specific and numeric where possible)
 3. Risks (3 bullets, realistic, not generic)
 4. Scenarios:
    - Base: what is most likely
@@ -53,6 +71,7 @@ ${JSON.stringify(enhancedData, null, 2)}
 
 Return ONLY valid JSON in this exact format:
 {
+  "summary_level": "${summaryLevel}",
   "executive_summary": "...",
   "key_drivers": ["..."],
   "risks": ["..."],
@@ -82,16 +101,16 @@ Return ONLY valid JSON in this exact format:
       return res.status(response.status).json(result);
     }
 
-const text = result.output?.[0]?.content?.[0]?.text || "{}";
+    const text = result.output?.[0]?.content?.[0]?.text || "{}";
 
-const cleaned = text
-  .replace(/```json/g, "")
-  .replace(/```/g, "")
-  .trim();
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-const parsed = JSON.parse(cleaned);
+    const parsed = JSON.parse(cleaned);
 
-return res.status(200).json(parsed);
+    return res.status(200).json(parsed);
 
   } catch (err) {
     return res.status(500).json({ error: err.message });
